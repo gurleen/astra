@@ -5,34 +5,26 @@ author: Gurleen Singh<gs585@drexel.edu>
 from collections import namedtuple
 from typing import Callable, Mapping, List, NamedTuple
 
-Route = namedtuple("Route", ["path", "handler"])
-Response = namedtuple("Response", ["content", "status", "headers"])
+from astra.router import Router
+
 
 class Astra(object):
 
-    routes: List[Route]
+    router: Router
 
     def __init__(self):
         self.routes = []
+        self.router = Router()
 
     def __call__(self, environ: Mapping, start_response: Callable) -> iter:
-        print(environ["REQUEST_METHOD"], environ["QUERY_STRING"])
-        handler = self.get_route(environ["QUERY_STRING"])
-        response: Response = handler()
-        start_response(response.status, response.headers)
+        print(environ["REQUEST_METHOD"], environ["RAW_URI"])
+        handler: Callable = self.router.get_route(environ["RAW_URI"])
+        response = handler()
+        start_response(response.code, response.headers)
         return iter([response.content])
 
-    def register_route(self, path: str, handler: Callable) -> None:
-        self.routes.append(Route(path, handler))
-
-    def get_route(self, query) -> Callable:
-        for route in self.routes:
-            if route.path == query:
-                return route.handler
-        return self.error_404
-
-    def error_404(self):
-        return Response(b"Not Found", "404 Not Found", [
-                ("Content-type", "text/plain"),
-                ("Content-length", str(len("Not Found")))
-            ])
+    def register_route(self, path: str) -> None:
+        def inner(func):
+            self.router.register_route(path, func)
+            func()
+        return inner

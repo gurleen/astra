@@ -2,16 +2,18 @@
 astra web framework
 author: Gurleen Singh<gs585@drexel.edu>
 """
-from astra.wsgi import Astra, Response
+from astra.wsgi import Astra
+from astra.response import Response
+
 
 app = Astra()
 
 
+@app.register_route("/")
 def hello():
-    return Response(b"Hello, world!", "200 OK", [
-                ("Content-type", "text/plain"),
-                ("Content-length", str(len("Hello, world!")))
-            ])
+    return Response("Hello, world!")
 
 
-app.register_route("", hello)
+@app.register_route("/test")
+def test():
+	return Response("This is a test")
