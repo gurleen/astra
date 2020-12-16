@@ -15,6 +15,8 @@ pip install .
 ## Example
 
 ```python
+
+
 from astra.wsgi import Astra
 from astra.response import Response
 from astra.blueprints import Blueprint
@@ -36,6 +38,7 @@ blueprint = Blueprint("/blueprint")
 @blueprint.path("/")
 def blueprint_test(request):
     return Response("Hello from a blueprint!")
+app.register_blueprint(blueprint)
 ```
 
 Run it using any WSGI-compliant server. I use [Gunicorn](https://github.com/benoitc/gunicorn) and have provided a run script for it:
