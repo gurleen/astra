@@ -38,6 +38,7 @@ blueprint = Blueprint("/blueprint")
 @blueprint.path("/")
 def blueprint_test(request):
     return Response("Hello from a blueprint!")
+
 app.register_blueprint(blueprint)
 ```
 
