@@ -8,6 +8,7 @@ from typing import Callable, Mapping, List, NamedTuple
 from astra.router import Router
 from astra.request import Request
 from astra.default_responses import error_405
+from astra.blueprints import Blueprint
 
 class Astra(object):
 
@@ -34,3 +35,7 @@ class Astra(object):
         def inner(func):
             self.router.register_route(path, func, methods)
         return inner
+
+    def register_blueprint(self, blueprint: Blueprint) -> None:
+        for route in blueprint.get_routes():
+            self.router.register_route_instance(route)

@@ -4,7 +4,9 @@ author: Gurleen Singh<gs585@drexel.edu>
 """
 from astra.wsgi import Astra
 from astra.response import Response
+from astra.blueprints import Blueprint
 
+from routes import blueprint
 
 app = Astra()
 
@@ -24,3 +26,5 @@ def testwitharg(request):
     name = request.params.get("name", "name")
     message = {"message": f"Hello, {name}!"}
     return Response(message)
+
+app.register_blueprint(blueprint)

@@ -41,7 +41,7 @@ class Router:
     def match(self, path, route):
         params = dict()
         path_split, route_split = path.split("/"), route.split("/")
-        if route_split == ["", ""]:
+        if route_split[-1] == "":
             route_split.pop()
         if len(path_split) != len(route_split):
             return None
@@ -57,3 +57,6 @@ class Router:
 
     def register_route(self, path, handler, methods):
         self.routes.append(Route(path, handler, methods))
+
+    def register_route_instance(self, route: Route):
+        self.routes.append(route)
