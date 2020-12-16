@@ -29,7 +29,6 @@ def hello(request):
 def username(request):
     name = request.params.get("name")
     # Response supports text as well as dicts/lists (serialized as JSON)
-
     return Response({"msg": f"Hello, {name}!"})
 
 blueprint = Blueprint("/blueprint")
