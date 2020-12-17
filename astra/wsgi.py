@@ -26,7 +26,7 @@ class Astra(object):
         method = environ["REQUEST_METHOD"]
         route, params, method_allowed = self.router.get_route(uri, method)
         request = Request(uri, params, environ)
-        if "wsgi.input" in environ:
+        if method == "POST" and "wsgi.input" in environ:
             body = environ.get("wsgi.input").read()
             if environ.get("CONTENT_TYPE", "") == "application/json":
                 body = json.loads(body)
