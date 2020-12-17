@@ -43,5 +43,5 @@ class Astra(object):
 
     def run(self, port=8000):
         with make_server('', port, self) as httpd:
-            print("Serving on port 8000...")
+            print(f"Serving on port {port}...")
             httpd.serve_forever()
