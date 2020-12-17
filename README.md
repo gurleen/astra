@@ -1,6 +1,6 @@
 # Astra 🚀
 
-Astra is a tiny Flask-esque web framework. It provides you with a basic `Request` and `Response` objects, as well as more advanced routing through the `Blueprint` object. URL parameters are supported. It requires no outside dependencies (not even [Werkzeug](https://github.com/pallets/werkzeug) or [WebOb](https://github.com/Pylons/webob), two awesome projects).
+Astra is a tiny Flask-esque web framework. It provides you with basic `Request` and `Response` objects, as well as more advanced routing through the `Blueprint` object. URL parameters are supported. It requires no outside dependencies (not even [Werkzeug](https://github.com/pallets/werkzeug) or [WebOb](https://github.com/Pylons/webob), two awesome projects).
 
 As someone who writes a lot of backend code, I wrote this in order to learn how web frameworks work. As such, I make no guarantees about the performance/security of this code, and I highly reccomend that you do not use it in production. You may find it useful in a small personal project, though 😄 .
 
