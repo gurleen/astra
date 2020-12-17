@@ -2,6 +2,7 @@
 astra web framework
 author: Gurleen Singh<gs585@drexel.edu>
 """
+import json
 from collections import namedtuple
 from typing import Callable, Mapping, List, NamedTuple
 from wsgiref.simple_server import make_server
@@ -23,6 +24,11 @@ class Astra(object):
         method = environ["REQUEST_METHOD"]
         route, params, method_allowed = self.router.get_route(uri, method)
         request = Request(uri, params, environ)
+        if "wsgi.input" in environ:
+            body = environ.get("wsgi.input").read()
+            if environ.get("CONTENT_TYPE", "") == "application/json":
+                body = json.loads(body)
+            request.body = body
 
         if not method_allowed:
             response = error_405(request)

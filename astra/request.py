@@ -8,3 +8,4 @@ class Request:
         self.route = route
         self.params = params
         self.env = env
+        self.body = None

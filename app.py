@@ -26,6 +26,10 @@ def testwitharg(request):
     message = {"message": f"Hello, {name}!"}
     return Response(message)
 
+@app.route("/post", methods=["POST"])
+def post_example(request):
+    return Response("You sent a post request!")
+
 app.register_blueprint(blueprint)
 
 if __name__ == "__main__":
