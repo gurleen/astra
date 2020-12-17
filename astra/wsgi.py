@@ -4,6 +4,7 @@ author: Gurleen Singh<gs585@drexel.edu>
 """
 from collections import namedtuple
 from typing import Callable, Mapping, List, NamedTuple
+from wsgiref.simple_server import make_server
 
 from astra.router import Router
 from astra.request import Request
@@ -18,7 +19,7 @@ class Astra(object):
         self.router = Router()
 
     def __call__(self, environ: Mapping, start_response: Callable) -> iter:
-        uri = environ["RAW_URI"]
+        uri = environ["PATH_INFO"]
         method = environ["REQUEST_METHOD"]
         route, params, method_allowed = self.router.get_route(uri, method)
         request = Request(uri, params, environ)
@@ -39,3 +40,8 @@ class Astra(object):
     def register_blueprint(self, blueprint: Blueprint) -> None:
         for route in blueprint.get_routes():
             self.router.register_route_instance(route)
+
+    def run(self, port=8000):
+        with make_server('', port, self) as httpd:
+            print("Serving on port 8000...")
+            httpd.serve_forever()

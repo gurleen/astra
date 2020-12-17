@@ -40,10 +40,9 @@ def blueprint_test(request):
     return Response("Hello from a blueprint!")
 
 app.register_blueprint(blueprint)
+
+if __name__ == "__main__":
+    app.run(8000)
 ```
 
-Run it using any WSGI-compliant server. I use [Gunicorn](https://github.com/benoitc/gunicorn) and have provided a run script for it:
-
-`./run.sh`
-
-You can also use [wsgiref](https://docs.python.org/3/library/wsgiref.html) which is a part of the Python standard library. I will make this functionality built-in at some point.
+This will serve the app on [http://localhost:8000/](http://localhost:8000/) using wsgiref, Python's built-in WSGI server. You can use any WSGI-compliant server, such as [Gunicorn](https://gunicorn.org/). The supplied `run.sh` script runs the example app via Gunicorn.
