@@ -9,3 +9,4 @@ class Request:
         self.params = params
         self.env = env
         self.body = None
+        self.extra = {}

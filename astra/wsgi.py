@@ -15,9 +15,11 @@ from astra.blueprints import Blueprint
 class Astra(object):
 
     router: Router
+    middleware: List[Callable]
 
     def __init__(self):
         self.router = Router()
+        self.middleware = []
 
     def __call__(self, environ: Mapping, start_response: Callable) -> iter:
         uri = environ["PATH_INFO"]
@@ -29,6 +31,9 @@ class Astra(object):
             if environ.get("CONTENT_TYPE", "") == "application/json":
                 body = json.loads(body)
             request.body = body
+
+        for handler in self.middleware:
+            request = handler(request)
 
         if not method_allowed:
             response = error_405(request)
@@ -46,6 +51,9 @@ class Astra(object):
     def register_blueprint(self, blueprint: Blueprint) -> None:
         for route in blueprint.get_routes():
             self.router.register_route_instance(route)
+
+    def register_middleware(self, handler: Callable) -> None:
+        self.middleware.append(handler)
 
     def run(self, port=8000):
         with make_server('', port, self) as httpd:
