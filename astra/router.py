@@ -5,6 +5,7 @@ author: Gurleen Singh<gs585@drexel.edu>
 from typing import List, Callable, Mapping
 from dataclasses import dataclass
 
+from astra.exceptions import MethodNotAllowed, NotFound
 from astra.default_responses import error_404
 from astra.response import Response
 
@@ -34,9 +35,10 @@ class Router:
             if params == None:
                 continue
             else:
-                method_allowed = (method in route.methods)
-                return route, params, method_allowed
-        return Route("/", error_404), {}, True
+                if method not in route.methods:
+                    raise MethodNotAllowed()
+                return route, params
+        raise NotFound
 
     def match(self, path, route):
         params = dict()

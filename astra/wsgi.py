@@ -9,8 +9,9 @@ from wsgiref.simple_server import make_server
 
 from astra.router import Router
 from astra.request import Request
-from astra.default_responses import error_405
+from astra.response import DEFAULT_HEADERS
 from astra.blueprints import Blueprint
+from astra.exceptions import AstraException
 
 class Astra(object):
 
@@ -22,23 +23,25 @@ class Astra(object):
         self.middleware = []
 
     def __call__(self, environ: Mapping, start_response: Callable) -> iter:
-        uri = environ["PATH_INFO"]
-        method = environ["REQUEST_METHOD"]
-        route, params, method_allowed = self.router.get_route(uri, method)
-        request = Request(uri, params, environ)
-        if method == "POST" and "wsgi.input" in environ:
-            body = environ.get("wsgi.input").read()
-            if environ.get("CONTENT_TYPE", "") == "application/json":
-                body = json.loads(body)
-            request.body = body
+        try:
+            uri = environ["PATH_INFO"]
+            method = environ["REQUEST_METHOD"]
+            print(self.router.routes)
+            route, params = self.router.get_route(uri, method)
+            request = Request(uri, params, environ)
+            if method == "POST" and "wsgi.input" in environ:
+                body = environ.get("wsgi.input").read()
+                if environ.get("CONTENT_TYPE", "") == "application/json":
+                    body = json.loads(body)
+                request.body = body
 
-        for handler in self.middleware:
-            request = handler(request)
+            for handler in self.middleware:
+                request = handler(request)
 
-        if not method_allowed:
-            response = error_405(request)
-        else:
             response = route.handler(request)
+        except AstraException as e:
+            start_response(str(e.status_code), DEFAULT_HEADERS)
+            return iter([e.message.encode("ascii")])
         
         start_response(response.code, response.headers)
         return iter([response.content])
