@@ -6,7 +6,6 @@ from typing import List, Callable, Mapping
 from dataclasses import dataclass
 
 from astra.exceptions import MethodNotAllowed, NotFound
-from astra.default_responses import error_404
 from astra.response import Response
 
 
